@@ -1,0 +1,42 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Hourglass Demo</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<style>
+#hourglass {
+	width: 200px;
+	height: 350px;
+	border: 1px solid #CCC;
+	margin-bottom: 20px;
+}
+
+
+
+	</style>
+</head>
+
+<body>
+	<div id="hourglass"></div>
+
+	<svg id="hourglass_shape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="190px" height="340px">
+		<path fill="#FFFFFF" stroke="#404040" d="M10.8,2.5c0,0-20.7,29.1-2.5,75s77.1,65.3,77,92.5
+	c-0.1,27.2-60.5,54.1-76.5,98s-4,64.5-4,64.5l177,3c0,0,18.8-44.5-9.5-85.5s-67.9-56.6-68-81.5c-0.1-24.9,76.8-56.6,82.5-112
+	s-17-56-17-56L10.8,2.5"/>
+	</svg>
+
+	<script src="dist/decomp.js"></script>
+	<script src="dist/pathseg.js"></script>
+	<script src="dist/matter.js"></script>
+	<script src="hourglass.js"></script>
+	<script>
+
+hourglass.outline("hourglass", 200, 320);
+
+	</script>
+</body>
+</html>
