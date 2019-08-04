@@ -1,63 +1,86 @@
 var hourglass = hourglass || {};
 
 hourglass.outline = function(container_id, width, height) {
-	var Engine = Matter.Engine,
-		Render = Matter.Render,
-		Runner = Matter.Runner,
-		Composites = Matter.Composites,
-		Common = Matter.Common,
-		World = Matter.World,
-		Svg = Matter.Svg,
-		Bodies = Matter.Bodies;
 
-	// create engine
-	var engine = Engine.create(),
-		world = engine.world;
+    var vertexSets = [];
 
-	// create renderer
-	var render = Render.create({
-		element: document.getElementById(container_id),
-		engine: engine,
-		options: {
-			width: width,
-			height: height
-		}
-	});
+    var paths = document.querySelectorAll("#hourglass_shape path");
 
-	Render.run(render);
+    var points = [];
 
-	// create runner
-	var runner = Runner.create();
-	Runner.run(runner, engine);
+    var INTERVAL = 10;
 
-	// add bodies
-	var terrain;
-    var vertexSets = [[]];
+    function getPoints(id) {
+    	var points = [];
+    	var p = document.querySelector("#" + id);
+	    var d = p.getTotalLength();
 
-    var p = document.querySelector("#hourglass_shape path");
-    var d = p.getTotalLength();
-    var point = p.getPointAtLength(0);
-    var pathStr = "M" + point.x + "," + point.y;
+	    for (var x = 0; x <= d; x += INTERVAL) {
+	    	point = p.getPointAtLength(x);
+		    points.push(point);
+	    }
+
+    	point = p.getPointAtLength(d);
+	    points.push(point);
 
 
-    for (var x = 1; x <= d; x += 5) {
-    	point = p.getPointAtLength(x);
-    	pathStr += "L" + point.x + "," + point.y;
-        vertexSets[0].push({ x: point.x, y: point.y });
+	    return points;
     }
 
+    // var last_point = all_points.slice(-1)[0];
+    // console.log(last_point);
+    // new_points.push(last_point);
 
-    p.setAttribute("d", pathStr);
+    var all_points = [];
 
-	terrain = Bodies.fromVertices(width, height, vertexSets, {
-		isStatic: true,
-		render: {
-        	fillStyle: '#FF0000',
-			strokeStyle: '#404040',
-			lineWidth: 1
-		}
-	}, true);    
+    // all_points = all_points.concat(getPoints("outline"));
 
+    var new_points = getPoints("small_curve_nw");
+    all_points = all_points.concat(new_points);
+	
+	new_points = getPoints("small_curve_ne").reverse();
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("big_curve_ne");
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("right_bend");
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("big_curve_se").reverse();
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("small_curve_se");
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("small_curve_sw").reverse();
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("big_curve_sw");
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("left_bend").reverse();
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("big_curve_nw").reverse();
+    all_points = all_points.concat(new_points);
+
+	new_points = getPoints("outline");
+ //    all_points = all_points.concat(new_points);
+	
+	var newPathStr = "M" + all_points.map(d => { return d.x + "," + d.y; }).reverse().join(" ") + "M" + new_points.map(d => { return d.x + "," + d.y; }).join(" ");
+
+	var newpath = document.createElementNS('http://www.w3.org/2000/svg',"path");  
+
+	newpath.setAttributeNS(null, "d", newPathStr);
+	newpath.setAttributeNS(null, "stroke", "url(#SVGID_11_)");
+	newpath.setAttributeNS(null, "stroke-width", "5px");
+	newpath.setAttributeNS(null, "fill", "rgba(0,0,255,0.3)");	
+
+	var svg = document.querySelectorAll("#hourglass_shape");
+	svg[0].appendChild(newpath);
+
+	console.log(newPathStr)
 
 }
 

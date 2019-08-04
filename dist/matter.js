@@ -180,9 +180,10 @@ var Axes = require('../geometry/Axes');
         });
 
         // render properties
-        var defaultFillStyle = (body.isStatic ? '#eeeeee' : Common.choose(['#556270', '#4ECDC4', '#C7F464', '#FF6B6B', '#C44D58'])),
+        var defaultFillStyle = (body.isStatic ? '#ff0000' : Common.choose(['#556270', '#4ECDC4', '#C7F464', '#FF6B6B', '#C44D58'])),
             defaultStrokeStyle = Common.shadeColor(defaultFillStyle, -20);
         body.render.fillStyle = body.render.fillStyle || defaultFillStyle;
+        console.log(body.render.fillStyle);
         body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle;
         body.render.sprite.xOffset += -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
         body.render.sprite.yOffset += -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
@@ -5967,6 +5968,8 @@ var Vector = require('../geometry/Vector');
             }
         }
 
+        console.log(body, parts[0]);
+
         if (parts.length > 1) {
             // create the parent body to be returned, that contains generated compound parts
             body = Body.create(Common.extend({ parts: parts.slice(0) }, options));
@@ -6346,6 +6349,8 @@ var Common = require('../core/Common');
             gradient = gradient.toFixed(3).toString();
             axes[gradient] = normal;
         }
+
+        console.log(axes);
 
         return Common.values(axes);
     };
