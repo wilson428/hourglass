@@ -1,0 +1,71 @@
+<!-- <!DOCTYPE html> -->
+<meta charset="utf-8">
+<head>
+	<title>Force-Directed Hourglass</title>
+	<style>
+#hourglass_demo {
+	width: 320px;
+}
+
+.grain {
+	fill: #BB0000;
+	stroke: #404040;
+	stroke-width: 1px;
+}
+
+.grain.outOfBounds {
+	fill: lightgreen;
+}
+
+.grain.falling {
+	fill: lightgreen;
+}
+
+.grain.fixed {
+	fill: lightblue;
+}
+
+.target {
+	fill: yellow;
+	stroke: black;
+	stroke-width: 1px;
+	opacity: 0.5;
+}
+
+.upper {
+	fill: rgba(0, 0, 255, 0.3);
+}
+
+.lower {
+	fill: rgba(0, 255, 0, 0.3);
+}
+	</style>
+</head>
+
+<body>
+	<div id="hourglass_demo"></div>
+  	<br />
+  	<button id="release_one">Release One</button>
+  	<button id="release_ten">Release Ten!</button>
+  	<button id="release_all">Release All!</button>
+	<script src="./src/d3.v5.min.js"></script>
+	<script type="text/javascript" src="dist/hourglass.js"></script>
+	<script type="text/javascript">	
+var hg = hourglass.default("#hourglass_demo", {
+	count: 100
+});
+
+document.getElementById("release_one").onclick = function() {
+	hg.releaseOne();
+}
+
+document.getElementById("release_ten").onclick = function() {
+	hg.releaseN(10, 2500);
+}
+
+document.getElementById("release_all").onclick = function() {
+	hg.releaseN(100, 10000);
+}
+  </script>
+</body>
+</html>
