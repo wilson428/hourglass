@@ -2,6 +2,11 @@
 
 Run an hour glass using D3's [force layout](https://github.com/d3/d3-force) and [`.polygonContains`](https://github.com/d3/d3-polygon) function.
 
+#### Hourglass Images
++ [Pure CSS](https://codepen.io/cgorton/pen/xgvZLO?page=1&)
++ [Traditional](http://www.clker.com/clipart-10979.html)
++ [Blue sand](http://www.clker.com/clipart-hourglass-2.html)
+
 ## Setup
 
 	var hg = hourglass.default("#hourglass_demo", {
