@@ -4,7 +4,7 @@ const WIDTH = 200;
 const HEIGHT = 360;
 const MARGIN = 5;
 
-// points toward which we'll be directing our grains
+// points toward which we'll be directing our jewels
 const TARGETS = {
 	bottom: { x: DX + WIDTH / 2, y: DY + HEIGHT - MARGIN },
 	bottleneck: { x: DX + WIDTH / 2, y: DY + HEIGHT / 2},
@@ -13,7 +13,7 @@ const TARGETS = {
 };
 
 const default_options = {
-	count: 100, 			// number of grains
+	count: 100, 			// number of jewels
 	fill: "#BB0000",		// see Wicked Witch, Gryffindor house points, etc.
 	radius: 3,				// radius of the particles
 	alpha_max: 0.85,		// ideally this shouldn't need to be modified except by super-users
@@ -23,7 +23,7 @@ const default_options = {
 // Debugging helpers. Should all be false in production
 var DEBUG = {
 	drawTargets: false,			// draw yellow circles around the attraction points in `TARGETS`
-	showBoundingPolygon: false,	// show the bounding polygon for the grains so that they don't puncture the glass
+	showBoundingPolygon: false,	// show the bounding polygon for the jewels so that they don't puncture the glass
 	tickOnClick: true,			// advance the simulation with `.tick()` while clicking anywhere on the hourglass
 	tickToStart: false,			// whether to start the simulation right away or force one to click through it
 	autoStart: true,			// whether to skip the initial animation
@@ -37,14 +37,13 @@ var polygon = [[160,385],[169.99783325195312,384.8216552734375],[179.97950744628
 var hourglass = function(id, options) {
 	options = Object.assign(default_options, options);
 
-	// number of grains that have passed the midpoint
-	var grain_count = {
+	// number of jewels that have passed the midpoint
+	var jewel_count = {
 		upper: options.count,
 		lower: 0
 	};
 
 	var svg = d3.select("svg");
-	var sandbox = svg.append("g").attr("id", "sandbox");
 
 	// var polygon = computePathPoints(d3.select("#bounding_polygon").node(), 10);
 
@@ -61,20 +60,20 @@ var hourglass = function(id, options) {
 	  	return node;
 	});
 
-	// make grains -- the "physical" nodes in the svg object
-	var grains = sandbox.selectAll("circle")
+	// make jewels -- the "physical" nodes in the svg object
+	var jewels = svg.selectAll("circle")
 		.data(nodes)
 		.enter().append("circle")
 		.attr("r", options.radius)
-		.attr("class", "grain")
+		.attr("class", "jewel")
 		// .style("fill", options.fill)
 		.attr("id", function(d) {
-			return "grain_" + d.id;
+			return "jewel_" + d.id;
 		});
 
-	// connect physical grains to data objects for convenience
+	// connect physical jewels to data objects for convenience
 	nodes.forEach(node => {
-		node.grain = svg.select("#grain_" + node.id);
+		node.jewel = svg.select("#jewel_" + node.id);
 	});
 
 	var x = d3.forceX(TARGETS.bottom.x).strength(0.012);
@@ -103,15 +102,15 @@ var hourglass = function(id, options) {
 		var alpha = simulation.alpha();
 		var outOfBoundsCount = 0;
 
-		grains.each(function(d, i, t) {
-			d.grain.attr("cx", function(d) { return d.x; }).attr("cy", function(d) { return d.y; });
+		jewels.each(function(d, i, t) {
+			d.jewel.attr("cx", function(d) { return d.x; }).attr("cy", function(d) { return d.y; });
 
 			// re-check if inBounds
 			var point = [d.x, d.y];
 
 			d.isInBounds = d3.polygonContains(polygon, point);
 
-			d.grain.classed("outOfBounds", !d.isInBounds);
+			d.jewel.classed("outOfBounds", !d.isInBounds);
 
 			outOfBoundsCount += d.isInBounds? 0 : 1;
 
@@ -120,7 +119,7 @@ var hourglass = function(id, options) {
 				// d.fy = d.y -= d.vy;
 				// d.fx = d.x;
 				// d.fy = d.y;
-				// d.grain.classed("fixed", true);
+				// d.jewel.classed("fixed", true);
 				d.cementMe = false;
 				// d.cemented = true;
 			}			
@@ -199,13 +198,13 @@ var hourglass = function(id, options) {
 		}
 	}
 
-	function releasegrain() {
-		grain_count.lower += 1;
-		grain_count.upper -= 1;
+	function releasejewel() {
+		jewel_count.lower += 1;
+		jewel_count.upper -= 1;
 
 		var closest = simulation.find(TARGETS.bottleneck.x, TARGETS.bottleneck.y, 100);
 
-		// closest.grain.classed("falling", true);
+		// closest.jewel.classed("falling", true);
 		// delete closest.fx;
 		// delete closest.fy;
 
@@ -225,7 +224,7 @@ var hourglass = function(id, options) {
 
 	return {
 		releaseOne: function() {
-			releasegrain();
+			releasejewel();
 		},
 		releaseN: function(N, duration) {
 			duration = duration || 1;
@@ -236,7 +235,7 @@ var hourglass = function(id, options) {
 			var count = 0;
 
 			var timer = setInterval(function() {
-				releasegrain();
+				releasejewel();
 				count += 1;
 				if (count === N) {
 					clearTimeout(timer);
